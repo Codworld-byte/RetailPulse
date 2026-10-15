@@ -36,7 +36,23 @@ def find_csv(filename):
                 st.error(f"Could not read {filename}: {error}")
                 return None
 
+    # Support compressed sales CSV
+    if filename == "retail_cleaned.csv":
+        compressed_paths = [
+            BASE_DIR / "data" / "processed" / "retail_cleaned.csv.gz",
+            Path("E:/data/processed/retail_cleaned.csv.gz"),
+        ]
+
+        for path in compressed_paths:
+            if path.exists():
+                try:
+                    return pd.read_csv(path, compression="gzip")
+                except Exception as error:
+                    st.error(f"Could not read compressed data: {error}")
+                    return None
+
     return None
+
 
 
 sales_df = find_csv("retail_cleaned.csv")
